@@ -8,12 +8,17 @@ const NweetFactory = ({ userObj}) => {
     
     const [nweet, setNweet] = useState("");
     const [attachment, setAttachment] = useState("");
-
+    const [doubleSubmitFlag, setDoubleSubmitFlag] = useState(true);
     const onSubmit = async (event) => {
         if (nweet === "") {
             return;
         }
         event.preventDefault();
+        if(!doubleSubmitFlag){
+            return;
+        }
+
+        setDoubleSubmitFlag(false);
 
         let nweetObj = {
             text : nweet,
@@ -37,6 +42,7 @@ const NweetFactory = ({ userObj}) => {
         await dbService.collection("nweets").add(nweetObj);
         setNweet("");
         setAttachment("");
+        setDoubleSubmitFlag(true);
     };
     const onChange = (event) => {
         const {
