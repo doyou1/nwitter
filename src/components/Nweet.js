@@ -27,20 +27,21 @@ const Nweet = ({userObj, nweetObj, isOwner}) => {
         let newNweetObj = {
             text : newNweet,
         };
+        /*
         let newAttachmentUrl = "";
         if(newAttachment != ""){
             const newAttachmentRef = storageService.ref().child(`${userObj.uid}/${uuid4()}`);
             const response = await newAttachmentRef.putString(newAttachment, "data_url");
             newAttachmentUrl = await response.ref.getDownloadURL();
+            console.log()
             newNweetObj = {
                 text : newNweet,
-                attachmentUrl : newAttachmentUrl,
+                newAttachmentUrl,
             };
             if(nweetObj.attachmentUrl != ""){
                 await storageService.refFromURL(nweetObj.attachmentUrl).delete();
             }
-
-        }
+        }*/
 
         await dbService.doc(`nweets/${nweetObj.id}`).update(newNweetObj);
         setEditing(false);
@@ -82,18 +83,8 @@ const Nweet = ({userObj, nweetObj, isOwner}) => {
                     autoFocus
                     className="formInput"
                     />
-                    {nweetObj.attachmentUrl ?(
-                        <>
-                        <img src={newAttachment ? newAttachment : nweetObj.attachmentUrl} width="300px" height="300px"/>
-                        </>
-                    ) : (
-                        newAttachment && (
-                            <>
-                        <img src={newAttachment} width="300px" height="300px"/>
-                            </>
-                        )
-                    )}
-                    <input onChange={onFileChange} type="file" accept="image/*" />
+                    {nweetObj.attachmentUrl && <img src={nweetObj.attachmentUrl} />}
+                    {/* <input onChange={onFileChange} type="file" accept="image/*" /> */}
                     <input type="submit" value="Update Nweet" className="formBtn"/>
                 </form>
                 <span onClick={toggleEditing} className="formBtn cancelBtn">

@@ -14,24 +14,29 @@ const NweetFactory = ({ userObj}) => {
             return;
         }
         event.preventDefault();
-        let attachmentUrl = "";
-        console.log(attachment);
-        if(attachment != ""){
-            const attachmentRef = storageService.ref().child(`${userObj.uid}/${uuid4()}`);
-            const response = await attachmentRef.putString(attachment, "data_url");
-            attachmentUrl = await response.ref.getDownloadURL();                
-        }
-        const nweetObj = {
+
+        let nweetObj = {
             text : nweet,
             createAt : Date.now(),
             creatorId : userObj.uid,
-            attachmentUrl,
         }
+
+        if(attachment != ""){
+            const attachmentRef = storageService.ref().child(`${userObj.uid}/${uuid4()}`);
+            const response = await attachmentRef.putString(attachment, "data_url");
+            const attachmentUrl = await response.ref.getDownloadURL();     
+            nweetObj = {
+                text : nweet,
+                createAt : Date.now(),
+                creatorId : userObj.uid,
+                attachmentUrl,
+            }           
+        }
+        
 
         await dbService.collection("nweets").add(nweetObj);
         setNweet("");
         setAttachment("");
-    
     };
     const onChange = (event) => {
         const {
